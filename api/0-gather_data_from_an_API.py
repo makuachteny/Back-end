@@ -5,30 +5,32 @@
 import requests
 import sys
 
-"""Modules use their functions to send HTTP requests and retrieve data from the command line arguments"""
-
 
 def main():
+    """main function"""
     user_id = int(sys.argv[1])
     todo_url = 'https://jsonplaceholder.typicode.com/todos'
-    user_url = f'https://jsonplaceholder.typicode.com/users/{user_id}'
+    user_url = 'https://jsonplaceholder.typicode.com/users/{}'.format(user_id)
 
     response = requests.get(todo_url)
-    total_tasks = 0
-    completed_tasks = []
 
-    for task in response.json():
-        if task['userId'] == user_id:
-            total_tasks += 1
-            if task['completed']:
-                completed_tasks.append(task['title'])
+    total_questions = 0
+    completed = []
+    for todo in response.json():
+
+        if todo['userId'] == user_id:
+            total_questions += 1
+
+            if todo['completed']:
+                completed.append(todo['title'])
 
     user_name = requests.get(user_url).json()['name']
-    summary = f"Employee {user_name} is done with tasks ({len(completed_tasks)}/{total_tasks}):"
-    print(summary)
 
-    for task in completed_tasks:
-        print(f"\t{task}")
+    printer = ("Employee {} is done with tasks({}/{}):".format(user_name,
+               len(completed), total_questions))
+    print(printer)
+    for q in completed:
+        print("\t {}".format(q))
 
 
 if __name__ == '__main__':
