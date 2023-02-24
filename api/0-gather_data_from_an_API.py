@@ -5,6 +5,8 @@
 import requests
 import sys
 
+"""Modules use their functions to send HTTP requests and retrieve data from the command line arguments"""
+
 
 def main():
     user_id = int(sys.argv[1])
