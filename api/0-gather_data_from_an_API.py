@@ -5,34 +5,29 @@
 import requests
 import sys
 
-# Retrieve user ID from the command line arguments
-
 
 def main():
     user_id = int(sys.argv[1])
-# Defines the URLs for the API endpoints
     todo_url = 'https://jsonplaceholder.typicode.com/todos'
-    user_url = 'https://jsonplaceholder.typicode.com/users/{}'.format(user_id)
+    user_url = f'https://jsonplaceholder.typicode.com/users/{user_id}'
 
+    response = requests.get(todo_url)
+    total_tasks = 0
+    completed_tasks = []
 
-# Retrieve the list of tasks from the API
-response = requests.get(todo_url)
-# Initialize variables for tracking completed tasks and total tasks
-total_tasks = 0
-completed_tasks = []
+    for task in response.json():
+        if task['userId'] == user_id:
+            total_tasks += 1
+            if task['completed']:
+                completed_tasks.append(task['title'])
 
-for task in reponse.json():
-    if task['userId'] == user_id:
-        total_tasks += 1
-        if task['completed']:
-            completed_tasks.append(task['title'])
+    user_name = requests.get(user_url).json()['name']
+    summary = f"Employee {user_name} is done with tasks ({len(completed_tasks)}/{total_tasks}):"
+    print(summary)
 
-summary = f"Employee {user_name} is done with tasks({len(completed_tasks)} /
-                                                    {total_tasks}): "
-print(summary)
+    for task in completed_tasks:
+        print(f"\t{task}")
 
-for task in completed_tasks:
-    print(f"\t {task}")
 
 if __name__ == '__main__':
     main()
